@@ -19,14 +19,16 @@ static ma_sound* trap;
 static ma_waveform* sineWave;
 
 // this is a process-callback. engine also has a concept of a "data callback" that must be setup with intial config
-void sound_process_example(void* pUserData, float* pFramesOut, ma_uint64 frameCount) {
-  float sAud[frameCount];
-  // grab current frame's worth of sinewave
-  ma_waveform_read_pcm_frames(sineWave, sAud, frameCount, NULL);
-  for (int i=0;i<frameCount;i++){
-    // sine-wave ringmod
-    pFramesOut[i] = (pFramesOut[i]/2.0) * sAud[i];
-  }
+void on_sound_process(void* pUserData, float* pFramesOut, ma_uint64 frameCount) {
+}
+
+void on_mouse_btn(struct mfb_window *window, mfb_mouse_button button, mfb_key_mod mod, bool isPressed) {
+}
+
+void on_mouse_move(struct mfb_window *window, int x, int y) {
+}
+
+void on_keyboard(struct mfb_window *window, mfb_key key, mfb_key_mod mod, bool isPressed) {
 }
 
 void game_init() {
@@ -64,9 +66,12 @@ int main(int argc, char *argv[]) {
   ma_waveform_config sineWaveConfig = ma_waveform_config_init(ma_format_f32, 2, 48000, ma_waveform_type_sine, 0.2, 440);
   ma_waveform_init(&sineWaveConfig, sineWave);
 
-
   // optional, this gets called on every process-tick, along with other sound stuff (playing samples, etc)
-  pntr_sound_register_process(audio_engine, sound_process_example);
+  pntr_sound_register_process(audio_engine, on_sound_process);
+
+  mfb_set_keyboard_callback(window, on_keyboard);
+  mfb_set_mouse_button_callback(window, on_mouse_btn);
+  mfb_set_mouse_move_callback(window, on_mouse_move);
 
   game_init();
   
