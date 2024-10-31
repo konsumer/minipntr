@@ -2,10 +2,16 @@
   <title>minipntr</title>
 </head>
 <body>
-<canvas id="canvas"></canvas>
+<canvas id="minipntr"></canvas>
 <script type="module">
 import minipntr from './build/wasm/wasm32/release/minipntr.mjs'
-const host = await minipntr({canvas: document.getElementById('canvas')})
-console.log(host)
+
+// here I am loading the file from URL instead of embedding it in the data-bundle
+const trap = new Uint8Array(await fetch('trap.mp3').then(r => r.arrayBuffer()))
+const host = await minipntr({
+  preRun({ FS }) {
+    FS.writeFile('trap.mp3', trap)
+  }
+})
 </script>
 </body>

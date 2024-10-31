@@ -1,6 +1,10 @@
 # Xmake cache
 .xmake/
-build/
+build/*
+!build/wasm/
+!build/wasm/wasm32/
+!build/wasm/wasm32/release/
+!build/wasm/wasm32/release/minipntr.mjs
 
 # MacOS Cache
 .DS_Store

@@ -49,13 +49,13 @@ void game_init() {
   if (trap != NULL) {
     pntr_sound_play(trap, true);
   } else {
-    fprintf(stderr, "Cound not load trap.wav.\n");
+    fprintf(stderr, "Cound not load trap.mp3.\n");
   }
 }
 
 void game_update() {
   // demo gfx
-  pntr_clear_background(screen, PNTR_RAYWHITE);
+  pntr_clear_background(screen, PNTR_BLACK);
   if (tweaked) {
     pntr_draw_circle_fill(screen, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 80, PNTR_GREEN);
   } else {
