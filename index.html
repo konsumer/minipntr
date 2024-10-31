@@ -2,7 +2,9 @@
   <title>minipntr</title>
 </head>
 <body>
+<canvas id="canvas"></canvas>
 <script type="module">
 import minipntr from './build/wasm/wasm32/release/minipntr.mjs'
+await minipntr({canvas: document.getElementById('canvas')})
 </script>
 </body>

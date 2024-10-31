@@ -13,4 +13,7 @@ xmake config -p macosx/windows/linux
 
 # build for current platform
 xmake
+
+# run a webserver to checkout wasm build
+npx -y live-server
 ```
