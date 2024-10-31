@@ -18,11 +18,23 @@ static ma_sound* trap;
 
 static ma_waveform* sineWave;
 
+bool tweaked;
+
 // this is a process-callback. engine also has a concept of a "data callback" that must be setup with intial config
 void on_sound_process(void* pUserData, float* pFramesOut, ma_uint64 frameCount) {
+  if (tweaked) {
+    float sAud[frameCount];
+    // grab current frame's worth of sinewave
+    ma_waveform_read_pcm_frames(sineWave, sAud, frameCount, NULL);
+    for (int i=0;i<frameCount;i++){
+      // sine-wave ringmod
+      pFramesOut[i] = (pFramesOut[i]/2.0) * sAud[i];
+    }
+  }
 }
 
 void on_mouse_btn(struct mfb_window *window, mfb_mouse_button button, mfb_key_mod mod, bool isPressed) {
+  tweaked = isPressed;
 }
 
 void on_mouse_move(struct mfb_window *window, int x, int y) {
@@ -44,10 +56,16 @@ void game_init() {
 void game_update() {
   // demo gfx
   pntr_clear_background(screen, PNTR_RAYWHITE);
-  pntr_draw_circle_fill(screen, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 80, PNTR_BLUE);
+  if (tweaked) {
+    pntr_draw_circle_fill(screen, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 80, PNTR_GREEN);
+  } else {
+    pntr_draw_circle_fill(screen, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 80, PNTR_BLUE);
+  }
 }
 
 int main(int argc, char *argv[]) {
+  tweaked = false;
+
   window = mfb_open_ex("minipntr", SCREEN_WIDTH, SCREEN_HEIGHT, 0);
   if (!window) {
     fprintf(stderr, "Cound not open window.\n");

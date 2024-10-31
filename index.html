@@ -5,6 +5,7 @@
 <canvas id="canvas"></canvas>
 <script type="module">
 import minipntr from './build/wasm/wasm32/release/minipntr.mjs'
-await minipntr({canvas: document.getElementById('canvas')})
+const host = await minipntr({canvas: document.getElementById('canvas')})
+console.log(host)
 </script>
 </body>
