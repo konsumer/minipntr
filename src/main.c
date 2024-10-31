@@ -1,5 +1,10 @@
 #include <stdio.h>
 
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif
+
+
 #include <MiniFB.h>
 #define PNTR_PIXELFORMAT_ARGB
 #define PNTR_IMPLEMENTATION
@@ -63,6 +68,13 @@ void game_update() {
   }
 }
 
+void engine_main_loop() {
+  if (mfb_update_ex(window, screen->data, SCREEN_WIDTH, SCREEN_HEIGHT) < 0) {
+    exit(EXIT_SUCCESS);
+  }
+  game_update();
+}
+
 int main(int argc, char *argv[]) {
   tweaked = false;
 
@@ -92,11 +104,15 @@ int main(int argc, char *argv[]) {
   mfb_set_mouse_move_callback(window, on_mouse_move);
 
   game_init();
-  
-  while(mfb_update_ex(window, screen->data, SCREEN_WIDTH, SCREEN_HEIGHT) >= 0) {
-    game_update();
+
+  #ifdef EMSCRIPTEN
+  emscripten_set_main_loop(engine_main_loop, 60, true);
+  #else
+  while(true) {
+    engine_main_loop();
     mfb_wait_sync(window);
   }
+  #endif
 
   pntr_unload_sound_engine(audio_engine);
   return 0;
